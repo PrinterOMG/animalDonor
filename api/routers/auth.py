@@ -13,6 +13,7 @@ from utils.security import get_password_hash, create_access_token, verify_passwo
 
 router = APIRouter(prefix='/auth', tags=['Authentication'])
 
+
 @router.post('/register')
 async def register(register_data: RegisterRequest, db_session: db_session_dep) -> Token:
     user_service = UserService(db_session)

@@ -11,7 +11,6 @@ from database.base import get_async_session
 from database.models import User
 from settings import settings
 
-
 db_session_dep = Annotated[AsyncSession, Depends(get_async_session)]
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
@@ -39,6 +38,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db_ses
         raise credentials_exception
 
     return user
+
 
 async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
     if not current_user.is_active:

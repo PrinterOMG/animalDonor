@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 import sqlalchemy
 from sqlalchemy import ForeignKey
@@ -15,9 +15,10 @@ class Pet(Base):
     blood_type: Mapped[str] = mapped_column(nullable=True)
     avatar: Mapped[str] = mapped_column(nullable=True)
     vet_passport: Mapped[str] = mapped_column(nullable=True)
-    age: Mapped[int] = mapped_column(nullable=True)
+    birthday: Mapped[date] = mapped_column(nullable=True)
     weight: Mapped[float] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(nullable=True)
+    role: Mapped[str] = mapped_column(nullable=False)
 
     owner_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('user.id'), nullable=True)
     pet_type_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('pet_type.id'), nullable=True)

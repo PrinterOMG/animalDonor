@@ -8,7 +8,6 @@ class UserBase(BaseModel):
     second_name: str | None
 
 
-
 class UserRead(UserBase):
     id: int
     email: str

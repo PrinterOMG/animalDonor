@@ -13,7 +13,7 @@ from settings import settings
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-postgres_dsn = f'postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}@postgres:5432/{settings.postgres_db}'
+postgres_dsn = f'postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}@localhost:5432/{settings.postgres_db}'
 config.set_main_option('sqlalchemy.url', postgres_dsn)
 
 
