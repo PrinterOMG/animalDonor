@@ -4,13 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers import router as main_router
 
-app = FastAPI(docs_url='/api/docs', redoc_url='/api/redoc')
+app = FastAPI(docs_url='/api/docs', redoc_url='/api/redoc', openapi_url='/api/openapi.json')
 
 origins = [
     'http://localhost',
     'http://localhost:8080',
     'http://localhost:3000',
-    'http://89.223.30.75:80',
+    'http://89.223.30.75:80'
+    'https://89.223.30.75',
 ]
 
 app.add_middleware(
