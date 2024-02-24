@@ -30,7 +30,7 @@ async def link_telegram(
     if telegram_link_request is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    await db_session.refresh(token, ['user'])
+    await db_session.refresh(telegram_link_request, ['user'])
 
     telegram_link_request.user.telegram_id = telegram_id
     telegram_link_request.user.phone = phone
