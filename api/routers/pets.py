@@ -24,7 +24,7 @@ async def get_pet_by_id(pet_id: int, db_session: db_session_dep) -> PetRead:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Pet with id {pet_id} does not exist')
 
-    await db_session.refresh(pet, ['pet_type'])
+    await db_session.refresh(pet, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return pet
 
@@ -48,7 +48,7 @@ async def create_pet(
     db_session.add(new_pet)
     await db_session.commit()
 
-    await db_session.refresh(new_pet, ["pet_type"])
+    await db_session.refresh(new_pet, ["pet_type", 'unavailable_lists', 'vaccinations'])
 
     return new_pet
 
@@ -79,6 +79,6 @@ async def update_pet(
 
     await db_session.commit()
 
-    await db_session.refresh(pet, ['pet_type'])
+    await db_session.refresh(pet, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return pet

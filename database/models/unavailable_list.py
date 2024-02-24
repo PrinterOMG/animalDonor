@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import sqlalchemy
-from sqlalchemy import ForeignKey, CheckConstraint
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.base import Base
@@ -13,6 +13,6 @@ class UnavailableList(Base):
     start_at: Mapped[datetime] = mapped_column(nullable=False)
     end_at: Mapped[datetime] = mapped_column(nullable=False)
 
-    pet_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('pet.id'), nullable=True)
+    pet_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('pet.id'), nullable=False)
 
-    owner: Mapped['Pet'] = relationship('Pet', backref='unavailable_lists')
+    pet: Mapped['Pet'] = relationship('Pet', backref='unavailable_lists')

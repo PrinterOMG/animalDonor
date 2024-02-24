@@ -4,6 +4,8 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field
 
 from api.schemas.pet_type import PetTypeRead
+from api.schemas.unavailable_list import UnavailableListRead
+from api.schemas.vaccination import VaccinationRead
 
 
 class PetBase(BaseModel):
@@ -22,6 +24,8 @@ class PetRead(PetBase):
 
     role: str
     pet_type: PetTypeRead
+    unavailable_lists: list[UnavailableListRead]
+    vaccinations: list[VaccinationRead]
 
 
 class PetUpdate(PetBase):
