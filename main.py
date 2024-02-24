@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers import router as main_router
 
-app = FastAPI()
+app = FastAPI(docs_url='/api/docs', redoc_url='/api/redoc')
 
 origins = [
     'http://localhost',
