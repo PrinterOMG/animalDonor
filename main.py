@@ -10,6 +10,7 @@ origins = [
     'http://localhost',
     'http://localhost:8080',
     'http://localhost:3000',
+    'http://89.223.30.75:80',
 ]
 
 app.add_middleware(
