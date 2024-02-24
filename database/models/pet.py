@@ -20,8 +20,11 @@ class Pet(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=True)
     role: Mapped[str] = mapped_column(nullable=False)
 
-    owner_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('user.id'), nullable=True)
-    pet_type_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('pet_type.id'), nullable=True)
+    owner_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('user.id'), nullable=False)
+    pet_type_id: Mapped[int] = mapped_column(sqlalchemy.BigInteger, ForeignKey('pet_type.id'), nullable=False)
 
     owner: Mapped['User'] = relationship('User', backref='pets')
     pet_type: Mapped['PetType'] = relationship('PetType', backref='pets')
+
+    # Also there are
+    # donations, unavailable_lists, vaccinations

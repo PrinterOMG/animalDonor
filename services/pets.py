@@ -14,6 +14,6 @@ class PetService:
         records = result.all()
 
         for record in records:
-            await self.db_session.refresh(record, ['pet_type'])
+            await self.db_session.refresh(record, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
         return records

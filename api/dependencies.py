@@ -8,7 +8,7 @@ from api.schemas.auth import TokenData
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.base import get_async_session
-from database.models import User
+from database.models import User, Pet
 from settings import settings
 
 db_session_dep = Annotated[AsyncSession, Depends(get_async_session)]
@@ -48,3 +48,16 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
 
 
 current_active_user_dep = Annotated[User, Depends(get_current_active_user)]
+
+
+async def check_user_pet(
+        pet_id: int,
+        current_active_user: current_active_user_dep,
+        db_session: db_session_dep
+):
+    pet = await db_session.get(Pet, pet_id)
+    if pet is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    if pet.owner_id != current_active_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
