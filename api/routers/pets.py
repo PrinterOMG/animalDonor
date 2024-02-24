@@ -10,12 +10,11 @@ router = APIRouter(prefix='/pets', tags=['Pets'])
 
 @router.get('/id/{pet_id}')
 async def get_pet_by_id(pet_id: int, db_session: db_session_dep) -> PetRead:
-    async with db_session:
-        pet = await db_session.get(Pet, pet_id)
+    pet = await db_session.get(Pet, pet_id)
 
-        if pet is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f'Pet with id {pet_id} does not exist')
+    if pet is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Pet with id {pet_id} does not exist')
 
     return pet
 
@@ -32,9 +31,8 @@ async def create_pet(
         pet_create: PetCreate,
         db_session: db_session_dep
 ) -> PetCreate:
-    async with db_session:
-        new_pet = Pet(**pet_create.model_dump())
-        await db_session.add(new_pet)
-        await db_session.commit()
+    new_pet = Pet(**pet_create.model_dump())
+    db_session.add(new_pet)
+    await db_session.commit()
 
     return pet_create

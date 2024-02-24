@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    name: str
+    first_name: str
 
     class Config:
         from_attributes = True
