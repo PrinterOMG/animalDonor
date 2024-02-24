@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 
 from api.dependencies import db_session_dep, check_user_pet
-from api.schemas.unavaible_list import UnavailableListCreate, UnavailableListUpdate, UnavailableListRead
+from api.schemas.unavailable_list import UnavailableListCreate, UnavailableListUpdate, UnavailableListRead
 from database.models import UnavailableList
 
 router = APIRouter(prefix='/{pet_id}/unavailable_list', tags=['Unavailable list'],

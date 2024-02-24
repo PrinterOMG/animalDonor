@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field
 
 from api.schemas.pet_type import PetTypeRead
-from api.schemas.unavaible_list import UnavailableListRead
+from api.schemas.unavailable_list import UnavailableListRead
 from api.schemas.vaccination import VaccinationRead
 
 
