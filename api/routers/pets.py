@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException, status
+from typing import List
+
+from fastapi import APIRouter, HTTPException, status, Query
 
 from api.dependencies import current_active_user_dep, db_session_dep
-from api.schemas.pets import PetRead, PetCreate, PetUpdate
-from database.models import Pet, PetType
+from api.schemas.pets import PetRead, PetCreate, PetUpdate, PetMatchRead
+from api.schemas.search_card import SearchCardRead
+from database.models import Pet, PetType, SearchCard
 from services.pets import PetService
 
 router = APIRouter(prefix='/pets', tags=['Pets'])
@@ -82,3 +85,40 @@ async def update_pet(
     await db_session.refresh(pet, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return pet
+
+
+@router.get('/match/recipients/{pet_id}', response_model=list[SearchCardRead])
+async def get_matched_recipients(
+        pet_id: int,
+        current_active_user: current_active_user_dep,
+        db_session: db_session_dep
+) -> list[SearchCard]:  # SearchMatchRead
+    pet = await db_session.get(Pet, pet_id)
+    if pet is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    if pet.owner_id != current_active_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+
+    pet_service = PetService(db_session)
+
+
+@router.get('/match/donors/{search_card_id}', response_model=list[PetMatchRead])
+async def get_matched_donors(
+        search_card_id: int,
+        current_active_user: current_active_user_dep,
+        db_session: db_session_dep,
+) -> list[PetMatchRead]:
+    search_card = await db_session.get(SearchCard, search_card_id)
+    if search_card is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    if search_card.author_id != current_active_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+
+    pet_service = PetService(db_session)
+    matched_donors = await pet_service.match_donors(search_card)
+    pet_matched_donors = []
+    for (i, k) in matched_donors:
+        pet_matched_donors.append(PetMatchRead(**i.model_dump(), match_percent=k))
+    return pet_matched_donors

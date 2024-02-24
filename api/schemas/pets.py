@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from api.schemas.pet_type import PetTypeRead
 from api.schemas.unavailable_list import UnavailableListRead
+from api.schemas.users import UserRead
 from api.schemas.vaccination import VaccinationRead
 
 
@@ -26,6 +27,16 @@ class PetRead(PetBase):
     pet_type: PetTypeRead
     unavailable_lists: list[UnavailableListRead]
     vaccinations: list[VaccinationRead]
+
+
+class PetMatchRead(PetBase):
+    id: int
+
+    role: str
+    pet_type: PetTypeRead
+    owner: UserRead
+
+    match_percent: float
 
 
 class PetUpdate(PetBase):
