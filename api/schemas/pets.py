@@ -14,6 +14,9 @@ class PetBase(BaseModel):
     weight: float
     role: str
 
+    class Config:
+        from_attributes = True
+
 
 class PetRead(PetBase):
     id: int

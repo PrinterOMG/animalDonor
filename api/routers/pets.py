@@ -30,9 +30,11 @@ async def get_pets_by_user_id(current_active_user: current_active_user_dep, db_s
 async def create_pet(
         pet_create: PetCreate,
         db_session: db_session_dep
-) -> PetCreate:
+) -> Pet:
     new_pet = Pet(**pet_create.model_dump())
     db_session.add(new_pet)
     await db_session.commit()
 
-    return pet_create
+    await db_session.refresh(new_pet, ["pet_type"])
+
+    return new_pet
