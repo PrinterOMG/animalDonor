@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models import SearchCard
@@ -26,6 +26,16 @@ class SearchCardService:
         await self.refresh_attrs_in_sequence(records, ['author', 'recipient'])
 
         return records
+
+    async def get_active_search_cards_count(self) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(SearchCard)
+            .where(SearchCard.is_active == True, SearchCard.active_until >= datetime.utcnow().date())
+        )
+
+        record = await self.db_session.scalar(stmt)
+        return record
 
     async def refresh_attrs_in_sequence(self, sequence, attrs):
         for obj in sequence:

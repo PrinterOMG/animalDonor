@@ -36,3 +36,7 @@ class SearchCardUpdate(SearchCardBase):
     is_active: bool | None = None
 
     recipient_id: int | None = None
+
+
+class CountResult(BaseModel):
+    count: int
