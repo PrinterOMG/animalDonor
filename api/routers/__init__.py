@@ -8,7 +8,7 @@ from .search_card import router as search_card_router
 from .vaccination import router as vaccination_router
 from .unavailable_list import router as unavailable_list_router
 
-router = APIRouter()
+router = APIRouter(prefix='/api')
 
 router.include_router(example_router)
 router.include_router(auth_router)
