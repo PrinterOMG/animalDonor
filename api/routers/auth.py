@@ -1,10 +1,10 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Body
 from fastapi.security import OAuth2PasswordRequestForm
 
-from api.dependencies import db_session_dep
+from api.dependencies import db_session_dep, current_active_user_dep
 from api.schemas.auth import RegisterRequest, Token
 from database.models import User
 from services.users import UserService
@@ -60,3 +60,20 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db_s
     )
 
     return Token(access_token=access_token)
+
+
+@router.post('/change_password', status_code=204)
+async def change_password(
+        old_password: Annotated[str, Body()],
+        new_password: Annotated[str, Body(min_length=8)],
+        current_active_user: current_active_user_dep,
+        db_session: db_session_dep
+):
+    if not verify_password(old_password, current_active_user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect old password')
+
+    new_hashed_password = get_password_hash(new_password)
+
+    current_active_user.hashed_password = new_hashed_password
+
+    await db_session.commit()
