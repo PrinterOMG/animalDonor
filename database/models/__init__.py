@@ -7,3 +7,5 @@ from .social_network_type import SocialNetworkType
 from .unavailable_list import UnavailableList
 from .search_card import SearchCard
 from .donation import Donation
+from .service_token import ServiceToken
+from .telegram_link_request import TelegramLinkRequest
