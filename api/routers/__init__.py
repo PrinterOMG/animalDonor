@@ -7,6 +7,7 @@ from .pets import router as pet_router
 from .search_card import router as search_card_router
 from .vaccination import router as vaccination_router
 from .unavailable_list import router as unavailable_list_router
+from .pet_type import router as pet_type_router
 
 router = APIRouter(prefix='/api')
 
@@ -19,3 +20,4 @@ pet_router.include_router(unavailable_list_router)
 router.include_router(pet_router)
 
 router.include_router(search_card_router)
+router.include_router(pet_type_router)
