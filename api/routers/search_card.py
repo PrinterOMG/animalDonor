@@ -3,11 +3,20 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, status, Query
 
 from api.dependencies import current_active_user_dep, db_session_dep
-from api.schemas.search_card import SearchCardRead, SearchCardCreate, SearchCardUpdate
+from api.schemas.search_card import SearchCardRead, SearchCardCreate, SearchCardUpdate, CountResult
 from database.models import SearchCard, User, Pet
 from services.search_card import SearchCardService
 
 router = APIRouter(prefix='/search_cards', tags=['Search card'])
+
+
+@router.get('/count', response_model=CountResult)
+async def get_active_search_cards_count(db_session: db_session_dep):
+    search_card_service = SearchCardService(db_session)
+
+    count = await search_card_service.get_active_search_cards_count()
+
+    return CountResult(count=count)
 
 
 @router.get('/my', response_model=list[SearchCardRead])

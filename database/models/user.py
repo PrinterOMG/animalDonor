@@ -22,3 +22,5 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow)
     phone: Mapped[str] = mapped_column(nullable=True)
     is_email_confirm: Mapped[bool] = mapped_column(nullable=False, default=False)
+
+    telegram_id: Mapped[int] = mapped_column(nullable=True)
