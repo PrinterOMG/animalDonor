@@ -2,12 +2,14 @@ import asyncio
 from logging.config import fileConfig
 
 from sqlalchemy import pool
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
 from database.base import Base
+from database.models import PetType
 from settings import settings
 
 # this is the Alembic Config object, which provides
@@ -65,6 +67,21 @@ def do_run_migrations(connection: Connection) -> None:
         context.run_migrations()
 
 
+async def insert_default_pet_types(connectable):
+    default_pet_types = [
+        {'id': 0, 'name': 'Кошка'},
+        {'id': 1, 'name': 'Собака'},
+        {'id': 2, 'name': 'Грызун'},
+        {'id': 3, 'name': 'Птица'},
+        {'id': 4, 'name': 'Экзотическое'},
+    ]
+
+    async with connectable.connect() as connection:
+        stmt = insert(PetType).on_conflict_do_nothing().values(default_pet_types)
+        await connection.execute(stmt)
+        await connection.commit()
+
+
 async def run_async_migrations() -> None:
     """In this scenario we need to create an Engine
     and associate a connection with the context.
@@ -79,6 +96,8 @@ async def run_async_migrations() -> None:
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
+
+    await insert_default_pet_types(connectable)
 
     await connectable.dispose()
 
