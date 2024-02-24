@@ -30,4 +30,5 @@ class SearchCardService:
     async def refresh_attrs_in_sequence(self, sequence, attrs):
         for obj in sequence:
             await self.db_session.refresh(obj, attrs)
-            await self.db_session.refresh(obj.recipient, ['pet_type'])
+            await self.db_session.refresh(obj.recipient,
+                                          ['pet_type', 'unavailable_lists', 'vaccinations'])

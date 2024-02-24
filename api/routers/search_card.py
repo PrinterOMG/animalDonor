@@ -35,7 +35,7 @@ async def get_search_card(search_card_id: int, db_session: db_session_dep) -> Se
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     await db_session.refresh(search_card, ['author', 'recipient'])
-    await db_session.refresh(search_card.recipient, ['pet_type'])
+    await db_session.refresh(search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return search_card
 
@@ -85,7 +85,7 @@ async def create_search_card(
     await db_session.commit()
 
     await db_session.refresh(new_search_card, ['author', 'recipient'])
-    await db_session.refresh(new_search_card.recipient, ['pet_type'])
+    await db_session.refresh(new_search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return new_search_card
 
@@ -128,6 +128,6 @@ async def update_search_card(
     await db_session.commit()
 
     await db_session.refresh(search_card, ['author', 'recipient'])
-    await db_session.refresh(search_card.recipient, ['pet_type'])
+    await db_session.refresh(search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
 
     return search_card
