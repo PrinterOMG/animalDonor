@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -9,7 +10,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from database.base import Base
-from database.models import PetType
+from database.models import PetType, Pet, User, SearchCard
 from settings import settings
 
 # this is the Alembic Config object, which provides
@@ -82,6 +83,117 @@ async def insert_default_pet_types(connectable):
         await connection.commit()
 
 
+async def insert_presentation_user(connectable):
+    data_list = [
+        {
+            "first_name": "Иван",
+            "second_name": "Иванов",
+            "patronymic": "Иванович",
+            "email": "ivan@example.com",
+            "hashed_password": "$2b$12$h1IstOesIQ26GC5xG3caDeVxp/yP0U0YBi7DVdAZxuB3aJwOWEOqO",  # password
+            "is_active": True,
+            "city": "Москва",
+            "is_email_public": False,
+            "created_at": datetime.datetime.utcnow(),
+            "phone": "79101234567",
+            "is_email_confirm": True,
+            "telegram_id": None
+        },
+        {
+            "first_name": "Мария",
+            "second_name": "Петрова",
+            "patronymic": "Сергеевна",
+            "email": "maria@example.com",
+            "hashed_password": "$2b$12$h1IstOesIQ26GC5xG3caDeVxp/yP0U0YBi7DVdAZxuB3aJwOWEOqO",
+            "is_active": True,
+            "city": "Санкт-Петербург",
+            "is_email_public": True,
+            "created_at": datetime.datetime.utcnow(),
+            "phone": "79998765432",
+            "is_email_confirm": True,
+            "telegram_id": None
+        }
+    ]
+
+    async with connectable.connect() as connection:
+        stmt = insert(User).on_conflict_do_nothing().values(data_list)
+        await connection.execute(stmt)
+        await connection.commit()
+
+
+async def insert_presentation_pets(connectable):
+    data_list = [
+        {
+            "name": "Пушистик",
+            "breed": "Персидская",
+            "blood_type": "A",
+            "birthday": datetime.date(2019, 5, 15),
+            "weight": 4.5,
+            "created_at": datetime.datetime(2023, 7, 10, 8, 30),
+            "role": "Донор",
+            "owner_id": 1,
+            "pet_type_id": 0
+        },
+        {
+            "name": "Шарик",
+            "breed": "Золотистый ретривер",
+            "blood_type": "DEA1-",
+            "birthday": datetime.date(2020, 3, 20),
+            "weight": 30.2,
+            "created_at": datetime.datetime(2023, 9, 5, 11, 45),
+            "role": "Донор",
+            "owner_id": 1,
+            "pet_type_id": 1
+        },
+        {
+            "name": "Барсик",
+            "breed": "Сиамская",
+            "blood_type": "A",
+            "birthday": datetime.date(2022, 1, 3),
+            "weight": 3.1,
+            "created_at": datetime.datetime(2024, 1, 20, 10, 15),
+            "role": "Реципиент",
+            "owner_id": 2,
+            "pet_type_id": 0
+        }
+    ]
+
+    async with connectable.connect() as connection:
+        stmt = insert(Pet).on_conflict_do_nothing().values(data_list)
+        await connection.execute(stmt)
+        await connection.commit()
+
+
+async def insert_presentation_search_card(connectable):
+    data_list = [
+        {
+            "description": "Срочно нужна кровь для переливания. Помогите Пушистику",
+            "destination_point": "Городская ветеринарная клиника",
+            "blood_amount": 50,
+            "active_until": datetime.date(2024, 3, 1),
+            "is_active": True,
+            "created_at": datetime.datetime.utcnow(),
+            "author_id": 1,
+            "recipient_id": 1
+        },
+        {
+            "description": "Ищем донора крови для нашего питомца",
+            "destination_point": "Домашний ветеринар",
+            "blood_amount": 150,
+            "active_until": datetime.date(2024, 2, 28),
+            "is_active": True,
+            "created_at": datetime.datetime.utcnow(),
+            "author_id": 2,
+            "recipient_id": 2
+        }
+    ]
+
+    async with connectable.connect() as connection:
+        stmt = insert(SearchCard).on_conflict_do_nothing().values(data_list)
+        await connection.execute(stmt)
+        await connection.commit()
+
+
 async def run_async_migrations() -> None:
     """In this scenario we need to create an Engine
     and associate a connection with the context.
@@ -98,6 +210,13 @@ async def run_async_migrations() -> None:
         await connection.run_sync(do_run_migrations)
 
     await insert_default_pet_types(connectable)
+
+    presentation = True
+
+    if presentation:
+        await insert_presentation_user(connectable)
+        await insert_presentation_pets(connectable)
+        await insert_presentation_search_card(connectable)
 
     await connectable.dispose()
 

@@ -13,6 +13,9 @@ class UserBase(BaseModel):
     city: str | None
     is_email_public: bool
 
+    class Config:
+        from_attributes = True
+
 
 class UserRead(UserBase):
     id: int

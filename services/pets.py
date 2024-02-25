@@ -34,7 +34,11 @@ class PetService:
         pass
 
     async def match_donors(self, search_card: SearchCard) -> list[tuple[Pet, float]]:
-        stmt = select(Pet).where(Pet.pet_type == search_card.recipient.pet_type)
+        recipient = search_card.recipient
+        await self.db_session.refresh(recipient, ['pet_type'])
+
+        # todo: exclude recipient
+        stmt = select(Pet).where(Pet.pet_type == recipient.pet_type, Pet.id != recipient.id)
         result = await self.db_session.scalars(stmt)
         records = result.all()
 
@@ -44,6 +48,6 @@ class PetService:
             await self.db_session.refresh(record, ['pet_type'])
             scores[record] = get_matching_score(search_card, record)
 
-        sorted_array = sorted(scores.items(), key=lambda x: (-x[1], x[0]))
-
-        return sorted_array
+        print(scores)
+        sorted_ratings = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        return sorted_ratings

@@ -116,9 +116,13 @@ async def get_matched_donors(
     if search_card.author_id != current_active_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
+    await db_session.refresh(search_card, ['recipient'])
+
     pet_service = PetService(db_session)
     matched_donors = await pet_service.match_donors(search_card)
     pet_matched_donors = []
     for (i, k) in matched_donors:
-        pet_matched_donors.append(PetMatchRead(**i.model_dump(), match_percent=k))
+        i.match_percent = k
+        await db_session.refresh(i, ['owner'])
+        pet_matched_donors.append(PetMatchRead.model_validate(i))
     return pet_matched_donors

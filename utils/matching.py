@@ -28,15 +28,16 @@ def get_matching_score(search_card: SearchCard, donor: Pet) -> float:
         score += 0.1
 
     possible_amount = get_possible_blood_donation_amount(donor)
-    if possible_amount >= recipient.blood_amount:
+    if possible_amount >= search_card.blood_amount:
         score += 0.8
-    elif possible_amount * 1.5 >= recipient.blood_amount:
+    elif possible_amount * 1.5 >= search_card.blood_amount:
         score += 0.7
-    elif possible_amount * 2 >= recipient_age.blood_amount:
+    elif possible_amount * 2 >= search_card.blood_amount:
         score += 0.6
 
     # возраст
     # чем ближе к рецепиенту по возрасту в рамках разрешенных тем больше очков, но в рамках от 1 до 8
+    return round(score, 2)
 
 
 def blood_type_match(recipient_blood_type: str, donor_blood_type: str, pet_type: PetType):
