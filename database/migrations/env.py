@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from database.base import Base
-from database.models import PetType
+from database.models import PetType, SocialNetworkType
 from settings import settings
 
 # this is the Alembic Config object, which provides
@@ -80,6 +80,18 @@ async def insert_default_pet_types(connectable):
         stmt = insert(PetType).on_conflict_do_nothing().values(default_pet_types)
         await connection.execute(stmt)
         await connection.commit()
+        
+
+async def insert_default_social_network_types(connectable):
+    default_social_network_types = [
+        {'id': 0, 'name': 'Telegram'},
+        {'id': 1, 'name': 'VK'},
+    ]
+
+    async with connectable.connect() as connection:
+        stmt = insert(SocialNetworkType).on_conflict_do_nothing().values(default_social_network_types)
+        await connection.execute(stmt)
+        await connection.commit()
 
 
 async def run_async_migrations() -> None:
@@ -98,6 +110,7 @@ async def run_async_migrations() -> None:
         await connection.run_sync(do_run_migrations)
 
     await insert_default_pet_types(connectable)
+    await insert_default_social_network_types(connectable)
 
     await connectable.dispose()
 

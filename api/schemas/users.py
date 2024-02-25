@@ -3,6 +3,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
+from api.schemas.social_network import SocialNetworkRead
+
 
 class UserBase(BaseModel):
     first_name: str | None
@@ -21,6 +23,8 @@ class UserRead(UserBase):
     avatar: str | None
     created_at: datetime
     is_email_confirm: bool
+    telegram_id: int | None
+    social_networks: list[SocialNetworkRead]
 
 
 class UserUpdate(UserBase):

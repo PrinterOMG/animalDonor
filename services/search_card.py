@@ -42,3 +42,6 @@ class SearchCardService:
             await self.db_session.refresh(obj, attrs)
             await self.db_session.refresh(obj.recipient,
                                           ['pet_type', 'unavailable_lists', 'vaccinations'])
+            await self.db_session.refresh(obj.author, ['social_networks'])
+            for soc_net in obj.author.social_networks:
+                await self.db_session.refresh(soc_net, ['social_network_type'])
