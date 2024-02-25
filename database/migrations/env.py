@@ -99,6 +99,7 @@ async def insert_default_social_network_types(connectable):
 async def insert_presentation_user(connectable):
     data_list = [
         {
+            'id': -1,
             "first_name": "Иван",
             "second_name": "Иванов",
             "patronymic": "Иванович",
@@ -113,6 +114,7 @@ async def insert_presentation_user(connectable):
             "telegram_id": None
         },
         {
+            'id': -2,
             "first_name": "Мария",
             "second_name": "Петрова",
             "patronymic": "Сергеевна",
@@ -137,6 +139,7 @@ async def insert_presentation_user(connectable):
 async def insert_presentation_pets(connectable):
     data_list = [
         {
+            'id': -1,
             "name": "Пушистик",
             "breed": "Персидская",
             "blood_type": "A",
@@ -144,10 +147,11 @@ async def insert_presentation_pets(connectable):
             "weight": 4.5,
             "created_at": datetime.datetime(2023, 7, 10, 8, 30),
             "role": "Донор",
-            "owner_id": 1,
+            "owner_id": -1,
             "pet_type_id": 0
         },
         {
+            'id': -2,
             "name": "Шарик",
             "breed": "Золотистый ретривер",
             "blood_type": "DEA1-",
@@ -155,10 +159,11 @@ async def insert_presentation_pets(connectable):
             "weight": 30.2,
             "created_at": datetime.datetime(2023, 9, 5, 11, 45),
             "role": "Донор",
-            "owner_id": 1,
+            "owner_id": -1,
             "pet_type_id": 1
         },
         {
+            'id': -3,
             "name": "Барсик",
             "breed": "Сиамская",
             "blood_type": "A",
@@ -166,7 +171,7 @@ async def insert_presentation_pets(connectable):
             "weight": 3.1,
             "created_at": datetime.datetime(2024, 1, 20, 10, 15),
             "role": "Реципиент",
-            "owner_id": 2,
+            "owner_id": -2,
             "pet_type_id": 0
         }
     ]
@@ -186,8 +191,8 @@ async def insert_presentation_search_card(connectable):
             "active_until": datetime.date(2024, 3, 1),
             "is_active": True,
             "created_at": datetime.datetime.utcnow(),
-            "author_id": 1,
-            "recipient_id": 1
+            "author_id": -1,
+            "recipient_id": -1
         },
         {
             "description": "Ищем донора крови для нашего питомца",
@@ -196,8 +201,8 @@ async def insert_presentation_search_card(connectable):
             "active_until": datetime.date(2024, 2, 28),
             "is_active": True,
             "created_at": datetime.datetime.utcnow(),
-            "author_id": 2,
-            "recipient_id": 2
+            "author_id": -2,
+            "recipient_id": -2
         }
     ]
 
