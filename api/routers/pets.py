@@ -125,7 +125,6 @@ async def get_matched_recipients(
     return pet_matched_recipients
 
 
-
 @router.get('/match/donors/{search_card_id}', response_model=list[PetMatchRead])
 async def get_matched_donors(
         search_card_id: int,
