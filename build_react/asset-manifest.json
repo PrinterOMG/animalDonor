@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.455399f8.css",
-    "main.js": "/static/js/main.5139ba36.js",
+    "main.js": "/static/js/main.a35b8b87.js",
     "static/media/dog image.svg": "/static/media/dog image.53a2a317011a264d65b9247c66609b2b.svg",
     "static/media/dog image.png": "/static/media/dog image.2fbef03af5344c0d0df5.png",
     "static/media/TTTravels-Regular.ttf": "/static/media/TTTravels-Regular.92a0c3030c288ad87583.ttf",
@@ -12,10 +12,10 @@
     "index.html": "/index.html",
     "static/media/add_pets.svg": "/static/media/add_pets.79c2436c91051a51af143eb356635e9d.svg",
     "main.455399f8.css.map": "/static/css/main.455399f8.css.map",
-    "main.5139ba36.js.map": "/static/js/main.5139ba36.js.map"
+    "main.a35b8b87.js.map": "/static/js/main.a35b8b87.js.map"
   },
   "entrypoints": [
     "static/css/main.455399f8.css",
-    "static/js/main.5139ba36.js"
+    "static/js/main.a35b8b87.js"
   ]
 }
