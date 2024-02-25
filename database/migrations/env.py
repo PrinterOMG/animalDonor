@@ -131,7 +131,7 @@ async def insert_presentation_user(connectable):
     ]
 
     async with connectable.connect() as connection:
-        stmt = insert(User).on_conflict_do_update().values(data_list)
+        stmt = insert(User).on_conflict_do_nothing().values(data_list)
         await connection.execute(stmt)
         await connection.commit()
 
@@ -177,7 +177,7 @@ async def insert_presentation_pets(connectable):
     ]
 
     async with connectable.connect() as connection:
-        stmt = insert(Pet).on_conflict_do_update().values(data_list)
+        stmt = insert(Pet).on_conflict_do_nothing().values(data_list)
         await connection.execute(stmt)
         await connection.commit()
 
@@ -207,7 +207,7 @@ async def insert_presentation_search_card(connectable):
     ]
 
     async with connectable.connect() as connection:
-        stmt = insert(SearchCard).on_conflict_do_update().values(data_list)
+        stmt = insert(SearchCard).on_conflict_do_nothing().values(data_list)
         await connection.execute(stmt)
         await connection.commit()
 
