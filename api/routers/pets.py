@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status, Query
 
 from api.dependencies import current_active_user_dep, db_session_dep
 from api.schemas.pets import PetRead, PetCreate, PetUpdate, PetMatchRead
-from api.schemas.search_card import SearchCardRead
+from api.schemas.search_card import SearchCardRead, SearchCardMatchRead
 from database.models import Pet, PetType, SearchCard
 from services.pets import PetService
 
@@ -87,7 +87,7 @@ async def update_pet(
     return pet
 
 
-@router.get('/match/recipients/{pet_id}', response_model=list[SearchCardRead])
+@router.get('/match/recipients/{pet_id}', response_model=list[SearchCardMatchRead])
 async def get_matched_recipients(
         pet_id: int,
         current_active_user: current_active_user_dep,
@@ -100,7 +100,30 @@ async def get_matched_recipients(
     if pet.owner_id != current_active_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
+    if pet.role == 'recipient':
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Pet must be a donor')
+
     pet_service = PetService(db_session)
+    matched_recipients = await pet_service.match_recipients(pet)
+
+    pet_matched_recipients = list()
+    for (search_card, k) in matched_recipients:
+        search_card.match_percent = k
+
+        await db_session.refresh(search_card, ['author', 'recipient'])
+        await db_session.refresh(search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
+        await db_session.refresh(search_card.author, ['social_networks'])
+
+        for soc_net in search_card.author.social_networks:
+            await db_session.refresh(soc_net, ['social_network_type'])
+
+            if not soc_net.is_public:
+                soc_net.link = 'Скрыто'
+
+        pet_matched_recipients.append(SearchCardMatchRead.model_validate(search_card))
+
+    return pet_matched_recipients
+
 
 
 @router.get('/match/donors/{search_card_id}', response_model=list[PetMatchRead])

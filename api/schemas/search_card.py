@@ -23,6 +23,10 @@ class SearchCardRead(SearchCardBase):
     recipient: PetRead
 
 
+class SearchCardMatchRead(SearchCardRead):
+    match_percent: float
+
+
 class SearchCardCreate(SearchCardBase):
     # author_id: int  Author id will be substituted automatically from the current user
     recipient_id: int
