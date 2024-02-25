@@ -124,5 +124,10 @@ async def get_matched_donors(
     for (i, k) in matched_donors:
         i.match_percent = k
         await db_session.refresh(i, ['owner'])
+        await db_session.refresh(i.owner, ['social_networks'])
+        for soc_net in i.owner.social_networks:
+            if not soc_net.is_public:
+                soc_net.link = 'Скрыто'
+
         pet_matched_donors.append(PetMatchRead.model_validate(i))
     return pet_matched_donors
