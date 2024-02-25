@@ -13,6 +13,9 @@ class SearchCardBase(BaseModel):
     active_until: date | None
     is_active: bool
 
+    class Config:
+        from_attributes = True
+
 
 class SearchCardRead(SearchCardBase):
     id: int

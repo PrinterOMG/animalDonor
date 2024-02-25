@@ -36,11 +36,12 @@ class PetService:
 
         await self.db_session.refresh(pet, ['pet_type'])
         for search_card in search_cards:
+            await self.db_session.refresh(search_card, ['recipient'])
+            await self.db_session.refresh(search_card.recipient, ['pet_type'])
             scores[search_card] = get_matching_score(search_card, pet)
 
         sorted_ratings = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         return sorted_ratings
-
 
     async def match_donors(self, search_card: SearchCard) -> list[tuple[Pet, float]]:
         recipient = search_card.recipient
