@@ -37,6 +37,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db_ses
     if user is None:
         raise credentials_exception
 
+    await db_session.refresh(user, ['social_networks'])
+    for soc_net in user.social_networks:
+        await db_session.refresh(soc_net, ['social_network_type'])
+
     return user
 
 

@@ -37,7 +37,10 @@ async def get_my_search_cards(current_active_user: current_active_user_dep, db_s
         }
     }
 )
-async def get_search_card(search_card_id: int, db_session: db_session_dep) -> SearchCardRead:
+async def get_search_card(
+        search_card_id: int,
+        db_session: db_session_dep
+) -> SearchCardRead:
     search_card = await db_session.get(SearchCard, search_card_id)
 
     if not search_card:
@@ -45,7 +48,14 @@ async def get_search_card(search_card_id: int, db_session: db_session_dep) -> Se
 
     await db_session.refresh(search_card, ['author', 'recipient'])
     await db_session.refresh(search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
-
+    await db_session.refresh(search_card.author, ['social_networks'])
+    
+    for soc_net in search_card.author.social_networks:
+        await db_session.refresh(soc_net, ['social_network_type'])
+        
+        if not soc_net.is_public:
+            soc_net.link = 'Скрыто'
+            
     return search_card
 
 
@@ -62,6 +72,11 @@ async def get_first_active_search_cards(
     search_card_service = SearchCardService(db_session)
 
     search_cards = await search_card_service.get_first_active_search_cards(limit, offset)
+
+    for search_card in search_cards:
+        for soc_net in search_card.author.social_networks:
+            if not soc_net.is_public:
+                soc_net.link = 'Скрыто'
 
     return search_cards
 
@@ -95,6 +110,10 @@ async def create_search_card(
 
     await db_session.refresh(new_search_card, ['author', 'recipient'])
     await db_session.refresh(new_search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
+    await db_session.refresh(search_card.author, ['social_networks'])
+
+    for soc_net in search_card.author.social_networks:
+        await db_session.refresh(soc_net, ['social_network_type'])
 
     return new_search_card
 
@@ -138,5 +157,9 @@ async def update_search_card(
 
     await db_session.refresh(search_card, ['author', 'recipient'])
     await db_session.refresh(search_card.recipient, ['pet_type', 'unavailable_lists', 'vaccinations'])
+    await db_session.refresh(search_card.author, ['social_networks'])
+
+    for soc_net in search_card.author.social_networks:
+        await db_session.refresh(soc_net, ['social_network_type'])
 
     return search_card
