@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, HTTPException, status, Query
 
 from api.dependencies import current_active_user_dep, db_session_dep
@@ -123,7 +121,6 @@ async def get_matched_recipients(
         pet_matched_recipients.append(SearchCardMatchRead.model_validate(search_card))
 
     return pet_matched_recipients
-
 
 
 @router.get('/match/donors/{search_card_id}', response_model=list[PetMatchRead])
